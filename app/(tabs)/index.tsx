@@ -1,74 +1,107 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { useGlobleContext } from '@/store/globleProvider';
+import { useEffect, useState } from 'react';
+import { FlatList, SafeAreaView, Text, View, Image, StyleSheet, ActivityIndicator, StatusBar, Dimensions } from 'react-native'
+import MineHeaderComponent from '@/components/Index/MineHeaderComponent';
+import WaterfallFlowContainerComponent from '@/components/Index/WaterfallFlowContainerComponent';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 
-export default function HomeScreen() {
+
+
+const getImageHeight = (url: string) => {
+  return new Promise<number>((resolve, reject) => {
+    Image.getSize(url, (width, height) => {
+      resolve(height);
+    }, (error) => {
+      reject(error);
+    });
+  });
+};
+
+
+//首页
+export default function RootIndexListScreen() {
+  const { state, dispatch }: any = useGlobleContext();
+  const [artWorkData, setArtWorkData] = useState<Array<any>>([])
+  const [tabsData, setTabsData] = useState<Array<any>>([])
+  const [loading, setLoading] = useState(true);
+  // 监听 `state.artworkList` 更新 data
+  useEffect(() => {
+    if (state.artworkList && state.artworkList.records) {
+      const newList = state.artworkList.records.map((item: any) => {
+        return {
+          ...item,
+          height: Math.floor(Math.random() * 300) + 200
+        }
+      })
+      const tabs = [{
+        name: '推荐',
+        offset: 1,
+        child: newList,
+      }, {
+        name: '直播',
+        offset: 2,
+        child: newList,
+      }, {
+        name: '科技数码',
+        offset: 3,
+        child: newList,
+      }, {
+        name: '摄影',
+        offset: 4,
+        child: newList,
+      }, {
+        name: '穿搭',
+        offset: 5,
+        child: newList,
+      }, {
+        name: '家具',
+        offset: 6,
+        child: newList,
+      }, {
+        name: '职场',
+        offset: 7,
+        child: newList,
+      }]
+      setTabsData(tabs)
+      setArtWorkData(newList); // 确保 records 里有数据
+      setLoading(false); // 关闭 loading
+    }
+  }, [state.artworkList]);
+
+  useEffect(() => {
+
+  }, [artWorkData])
+
+  useEffect(() => {
+  }, [tabsData])
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <MineHeaderComponent />
+      <FlatList
+        style={{ flex: 1 }}
+        data={tabsData}
+        renderItem={({ item, index }) => (
+          <WaterfallFlowContainerComponent artWorkData={item.child} />
+        )}
+        horizontal
+        pagingEnabled={true}
+        keyExtractor={(item, index) => index.toString()}
+        viewabilityConfig={{
+          viewAreaCoveragePercentThreshold: 100, // item滑动80%部分才会到下一个
+        }}
+        snapToAlignment="center"
+        decelerationRate="fast"
+        bounces={false}
+      />
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+    </View>
+  )
+}

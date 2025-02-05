@@ -9,6 +9,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "需要访问您的相册来保存图片"
+      },
       "supportsTablet": true
     },
     "android": {
