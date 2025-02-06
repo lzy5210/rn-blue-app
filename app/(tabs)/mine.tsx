@@ -74,8 +74,5 @@ const styles = StyleSheet.create({
     },
     leftLogo1: {
         marginRight: 15
-    },
-    leftLogo2: {
-
     }
 });
