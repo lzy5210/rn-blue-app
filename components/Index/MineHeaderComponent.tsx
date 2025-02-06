@@ -34,7 +34,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         justifyContent: 'space-between',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderBottomColor: '#DCDCDC',
+        borderBottomWidth: 0.2,
     },
     commonImg: {
         width: 25,

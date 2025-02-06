@@ -34,7 +34,8 @@ const WaterfallFlowContainerComponent: React.FC<{
             >
                 <View style={styles.logo}>
                     <Image
-                        source={{ uri: item.previewImg }}
+                        source={{ uri: `${item.previewImg}?timestamp=${Date.now()}` }}
+                        // source={{uri: 'https://p26-sign.douyinpic.com/tos-cn-i-p14lwwcsbr/53e6d3b610804f13b22dc6257c350b16~tplv-p14lwwcsbr-7.image?lk3s=7b078dd2&x-expires=1738839600&x-signature=ejd3Kncm4G67V2ZnBBAWmfuE740%3D&from=2064092626&se=false&sc=image&biz_tag=aweme_comment&l=20250206130753803DAB6A34A39C6022C3'}}
                         resizeMode="cover"
                         style={styles.image} // 确保图片宽度填充整个容器
                     />
@@ -62,12 +63,11 @@ const WaterfallFlowContainerComponent: React.FC<{
         )
     }
     return (
-        <View style={{ width: Dimensions.get('window').width }}>
+        <View style={{ width: Dimensions.get('window').width}}>
             <WaterfallFlow
                 showsVerticalScrollIndicator={false} // 隐藏垂直滚动条
-                style={{ marginBottom: 90, flex: 1 }}
                 data={artWorkData}
-                contentContainerStyle={{ backgroundColor: '#f9f9f9' }}
+                contentContainerStyle={{ backgroundColor: '#f9f9f9',paddingBottom: 100}}
                 ListEmptyComponent={() => <Text>暂无数据</Text>}
                 keyExtractor={item => item.id.toString()}
                 numColumns={2}
