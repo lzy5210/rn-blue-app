@@ -8,6 +8,7 @@ export const GetArtWorkData = (params: {
     publishCity?: string | undefined,
     artworkType?: string | undefined,
     focusIds?: Array<string> | undefined,
+    categoryIds?: Array<string> | undefined,
     pageSize?: any,
     pageNum?: any
 }) => {
@@ -16,4 +17,14 @@ export const GetArtWorkData = (params: {
         method: "GET",  // 请求方法
         params
     });
-};
+}
+
+export const GetCategorys = () => {
+    return request({
+        url: "/art/category/getCategory",
+        method: "GET"
+    })
+}
+
+
+// export 

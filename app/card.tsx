@@ -6,26 +6,14 @@ import axios from 'axios';
 
 export default function CardScreen() {
     const data = [{
-        id: 1,
-        img: require('@/assets/bizhi/b1.jpg')
-    }, {
-        id: 2,
-        img: require('@/assets/bizhi/b2.jpg')
-    }, {
-        id: 3,
-        img: require('@/assets/bizhi/b3.jpg')
-    }, {
-        id: 4,
-        img: require('@/assets/bizhi/b4.jpg')
-    }, {
-        id: 5,
-        img: require('@/assets/bizhi/b5.jpg')
-    }, {
-        id: 6,
-        img: require('@/assets/bizhi/b6.jpg')
-    }, {
         id: 7,
-        img: require('@/assets/bizhi/b7.jpg')
+        img: 'https://reactnative.dev/img/tiny_logo.png'
+    }, {
+        id: 8,
+        img: 'https://oss.iblut.cn:9000/blue-oss/0f736976e604e7696a1e2857fed7e37.jpg'
+    }, {
+        id: 9,
+        img: 'https://p3-sign.douyinpic.com/tos-cn-i-p14lwwcsbr/0a1096a8fd3a4d5e96c2ec0391eea20d~tplv-p14lwwcsbr-x2-q75-r:248:332:q75.jpeg?lk3s=7b078dd2&x-expires=1739116800&x-signature=cNJZhgdezqsk638zumFujEr%2BwGc%3D&from=2064092626&se=false&sc=thumb&biz_tag=aweme_comment&l=20250209183550E31DB08F71295F88E81E'
     }]
     useEffect(() => {
         axios.get('http://img.fenei.net/assets/pe/Gb2kW13MCE10756Hb9Wr.png')

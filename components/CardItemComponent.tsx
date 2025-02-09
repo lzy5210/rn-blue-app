@@ -57,7 +57,7 @@ export const RenderItemImg = ({ item, currentItem }: any): React.ReactNode => {
     return (
         <TouchableOpacity onLongPress={handleLongPress} delayLongPress={500} activeOpacity={1} style={styles.cardContainer}>
             <Animated.Image
-                source={item.img}
+                source={{ uri: item.img }}
                 style={[
                     styles.imgSty,
                     {

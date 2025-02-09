@@ -7,7 +7,8 @@ const AppContext: any = createContext(undefined)
 // 1. 定义初始状态
 const initialState = {
     userInfo: '',
-    artworkList: []
+    artworkList: [],
+    indexTabs: []
 }
 
 // 2. 创建 Reducer
@@ -17,6 +18,8 @@ const reducer = (state: typeof initialState, action: { type: string; payload?: a
             return { ...state, userInfo: action.payload };
         case 'SET_ARTWORKS':
             return { ...state, artworkList: action.payload };
+        case 'SET_INDEXTABS':
+            return { ...state, indexTabs: action.payload };
         default:
             return state;
     }

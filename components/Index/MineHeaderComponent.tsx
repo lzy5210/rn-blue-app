@@ -6,11 +6,17 @@ const MineHeaderComponent = () => {
             <View style={styles.leftLogo}>
                 <Image source={require('@/assets/index/unfold.png')} style={styles.commonImg} />
             </View>
-            <TouchableOpacity style={styles.centerDes}>
-                <Text style={{ color: '#1a1a1a', fontWeight: '500', fontSize: 16 }}>关注</Text>
-                <Text style={{ color: '#1a1a1a', fontWeight: '500', fontSize: 16, marginLeft: 15, marginRight: 15 }}>发现</Text>
-                <Text style={{ color: '#1a1a1a', fontWeight: '500', fontSize: 16 }}>附近</Text>
-            </TouchableOpacity>
+            <View style={styles.centerDes}>
+                <TouchableOpacity>
+                    <Text style={{ color: '#1a1a1a', fontWeight: '500', fontSize: 16 }}>关注</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text style={{ color: '#1a1a1a', fontWeight: '500', fontSize: 16, marginLeft: 15, marginRight: 15 }}>发现</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text style={{ color: '#1a1a1a', fontWeight: '500', fontSize: 16 }}>附近</Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.rightLogo}>
                 <View style={styles.leftLogo2}>
                     <Image source={require('@/assets/index/search-data.png')} style={styles.commonImg} />

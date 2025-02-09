@@ -8,7 +8,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Animated, Easing, Text, Image, View } from 'react-native';
 import { useGlobleContext } from '@/store/globleProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GetArtWorkData } from '@/api/artwork/artwork';
+import { GetArtWorkData, GetCategorys } from '@/api/artwork/artwork';
 import { GetUserInfo } from '@/api/user/user';
 
 
@@ -80,12 +80,13 @@ export default function TabLayout() {
         const loginId = await AsyncStorage.getItem("loginId");
         setToken(storedToken);
         setIsLoading(false); // ✅ 让 UI 先恢复
-        if (storedToken) {
+        if (storedToken && loginId) {
           // ✅ 并行加载数据（加速）
-          const [artworkRes, userRes] = await Promise.all([
+          const [artworkRes, userRes, categoryRes] = await Promise.all([
             GetArtWorkData({ pageNum: 1, pageSize: 10 }),
-            loginId ? GetUserInfo(loginId.toString()) : null,
-          ])  
+            GetUserInfo(loginId.toString()),
+            GetCategorys(),
+          ])
           // ✅ 更新作品列表
           if (artworkRes) {
             dispatch({ type: "SET_ARTWORKS", payload: artworkRes });
@@ -94,6 +95,45 @@ export default function TabLayout() {
           if (userRes) {
             dispatch({ type: "SET_USER_INFO", payload: userRes });
           }
+          // ✅ tab信息
+          if (categoryRes.data) {
+            const indexTabs = [
+              {
+                name: '关注',
+                offset: 0,
+                child: [],
+              },
+              {
+                name: '全部',
+                offset: 1,
+                child: artworkRes.records,
+              },
+            ];
+
+            // 处理所有分类的请求
+            const categoryDataPromises = categoryRes.data.map((category: any) =>
+              GetArtWorkData({ pageNum: 1, pageSize: 10, categoryIds: [category.id] })
+            );
+
+            // 等待所有请求完成
+            const categoryDataResults = await Promise.all(categoryDataPromises);
+
+            // 组合数据
+            categoryDataResults.forEach((res, index) => {
+              indexTabs.push({
+                name: categoryRes.data[index].categoryName,
+                offset: index + 2,
+                child: res.records, // 假设 `res.records` 是数据
+              });
+            });
+            indexTabs.push({
+              name: '杭州',
+              offset: indexTabs.length,
+              child: []
+            })
+            dispatch({ type: "SET_INDEXTABS", payload: indexTabs });
+          }
+
         }
       } catch (error) {
         console.error("加载数据失败:", error);

@@ -1,94 +1,61 @@
 import { useGlobleContext } from '@/store/globleProvider';
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, SafeAreaView, Text, View, Image, StyleSheet, ActivityIndicator, StatusBar, Dimensions } from 'react-native'
+import { FlatList, SafeAreaView, Text, View, ActivityIndicator, Dimensions, Animated } from 'react-native'
 import MineHeaderComponent from '@/components/Index/MineHeaderComponent';
 import WaterfallFlowContainerComponent from '@/components/Index/WaterfallFlowContainerComponent';
 import TabsComponent from '@/components/Index/TabsComponent';
 
-
-
-
-const getImageHeight = (url: string) => {
-  return new Promise<number>((resolve, reject) => {
-    Image.getSize(url, (width, height) => {
-      resolve(height);
-    }, (error) => {
-      reject(error);
-    });
-  });
-};
+const screenWidth = Dimensions.get("window").width;
 
 //首页
 export default function RootIndexListScreen() {
   const { state, dispatch }: any = useGlobleContext();
   const flatListRef = useRef<FlatList>(null);
-  const [artWorkData, setArtWorkData] = useState<Array<any>>([])
   const [tabsData, setTabsData] = useState<Array<any>>([])
-  const [loading, setLoading] = useState(true);
-  // 监听 `state.artworkList` 更新 data
-  useEffect(() => {
-    if (state.artworkList && state.artworkList.records) {
-      const newList = state.artworkList.records.map((item: any) => {
-        return {
-          ...item,
-          height: Math.floor(Math.random() * 300) + 200
-        }
-      })
-      const tabs = [{
-        name: '推荐',
-        offset: 0,
-        child: newList,
-      }, {
-        name: '直播',
-        offset: 1,
-        child: newList,
-      }, {
-        name: '科技数码',
-        offset: 2,
-        child: newList,
-      }, {
-        name: '摄影',
-        offset: 3,
-        child: newList,
-      }, {
-        name: '穿搭',
-        offset: 4,
-        child: newList,
-      }, {
-        name: '家具',
-        offset: 5,
-        child: newList,
-      }, {
-        name: '职场',
-        offset: 6,
-        child: newList,
-      }, {
-        name: '科技',
-        offset: 7,
-        child: [],
-      }, {
-        name: '家庭',
-        offset: 8,
-        child: [],
-      }, {
-        name: '生活',
-        offset: 9,
-        child: [],
-      }]
-      setTabsData(tabs)
-      setArtWorkData(newList); // 确保 records 里有数据
-      setLoading(false); // 关闭 loading
-    }
-  }, [state.artworkList]);
+  const [isShowTab, setIsShowTab] = useState(true)
+  const translateY = useRef(new Animated.Value(0)).current; // 初始为 0
   //默认从1开始滚动
-  const [scrollToOffset, setScrollToOffset] = useState<number>(0)
+  const [scrollToOffset, setScrollToOffset] = useState<number>(1)
+
+  const [loading, setLoading] = useState(true);
+  //加载首屏数据
+  useEffect(() => {
+    if (state.indexTabs && state.indexTabs.length > 0) {
+      setTabsData(state.indexTabs)
+      setLoading(false)
+      setTimeout(() => {
+        flatListRef.current?.scrollToIndex({ index: scrollToOffset, animated: true });
+      }, 100);
+    }
+  }, [state.indexTabs]);
+
+  //顶部Tab触发改变
   const onChangeOffset = (scrollToOffset: number) => {
     if (tabsData.length > 0 && flatListRef.current) {
+      setScrollToOffset(scrollToOffset)
       flatListRef.current?.scrollToIndex({ index: scrollToOffset, animated: true });
     }
   }
+  //如果tabs收起来或者关闭触发
   useEffect(() => {
-  }, [tabsData])
+    // if (!isShowTab) {
+    //   console.log('开始变更数据源');
+    //   flatListRef.current?.scrollToIndex({ index: 1, animated: true });
+    //   const changeTabs = state.indexTabs.slice(0, 3);
+    //   //还原数据源
+    //   setTabsData(changeTabs)
+    // } else {
+    //   //还原数据源
+    //   setTabsData(state.indexTabs)
+    //   // setLoading(false)
+    // }
+    Animated.timing(translateY, {
+      toValue: isShowTab ? 0 : -50, // 🚀 平滑移动到目标位置
+      duration: 300, // 动画时长
+      useNativeDriver: true, // 提高性能
+    }).start();
+  }, [isShowTab]);
+
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -99,36 +66,59 @@ export default function RootIndexListScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: '#f9f9f9' }}>
       <MineHeaderComponent />
-      <TabsComponent tabArray={tabsData}
+      <TabsComponent
+        isShowTab={isShowTab}
+        tabArray={tabsData}
         scrollToOffset={scrollToOffset}
         onChangeOffset={onChangeOffset} />
-      <FlatList
-        style={{ flex: 1 }}
-        ref={flatListRef}
-        data={tabsData}
-        renderItem={({ item, index }) => (
-          <WaterfallFlowContainerComponent artWorkData={item.child} />
-        )}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        pagingEnabled={true}
-        keyExtractor={(item, index) => index.toString()}
-        viewabilityConfig={{
-          viewAreaCoveragePercentThreshold: 100, // item滑动80%部分才会到下一个
-        }}
-        onMomentumScrollEnd={event => {
-          const { width } = Dimensions.get('window'); // 获取屏幕宽度
-          const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
-          if (newIndex >= 0 && newIndex < tabsData.length) {
-            const currentItem = tabsData[newIndex]
-            setScrollToOffset(currentItem.offset)
-          }
-        }}
-        snapToAlignment="center"
-        decelerationRate="fast"
-        bounces={false}
-      />
+      <Animated.View
+        style={{
+          flex: 1,
+          transform: [{ translateY }]
+        }}>
+        <FlatList
+          ref={flatListRef}
+          data={tabsData}
+          renderItem={({ item, index }) => (
+            <WaterfallFlowContainerComponent
+              scrollToOffset={scrollToOffset}
+              artWorkData={item.child}
+              onScrollEvent={(isShowTab: boolean) => setIsShowTab(isShowTab)} />
+          )}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          pagingEnabled={true}
+          keyExtractor={(item, index) => index.toString()}
+          viewabilityConfig={{
+            viewAreaCoveragePercentThreshold: 100, // item滑动80%部分才会到下一个
+          }}
+          onScroll={event => {
+            const { width } = Dimensions.get('window');
+            const offsetX = event.nativeEvent.contentOffset.x; // 获取水平滚动的偏移量
+            const progress = offsetX / (width * (tabsData.length - 1)); // 计算滑动进度 0~1
+            // console.log('滑动进度:', progress.toFixed(2)); // 取 2 位小数
+          }}
+          getItemLayout={(data, index) => ({
+            length: screenWidth, // 每个 item 的宽度
+            offset: screenWidth * index, // item 在滚动区域的偏移
+            index,
+          })}
+          onMomentumScrollEnd={event => {
+            const { width } = Dimensions.get('window'); // 获取屏幕宽度
+            const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+            if (newIndex >= 0 && newIndex < tabsData.length) {
+              const currentItem = tabsData[newIndex]
+              console.log('currentItem.offset===>>', currentItem.offset);
 
+              setScrollToOffset(currentItem.offset)
+            }
+          }}
+          snapToInterval={Dimensions.get('window').width} // 确保每次滑动一个屏幕
+          snapToAlignment="center"
+          decelerationRate="fast"
+          bounces={false}
+        />
+      </Animated.View>
     </View>
   )
 }

@@ -1,48 +1,62 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, StyleSheet, FlatList, Dimensions, TouchableOpacity } from 'react-native'
+import * as Animatable from 'react-native-animatable';
 const TabsComponent: React.FC<{
     tabArray: Array<any>,
     //滚动下标
     scrollToOffset: number,
     //触发列表页更新
-    onChangeOffset: (scrollToOffset: number) => void
+    onChangeOffset: (scrollToOffset: number) => void,
+    //是否展示
+    isShowTab: boolean
 }> = ({
+    isShowTab,
     tabArray,
     scrollToOffset,
     onChangeOffset
 }) => {
+
         const [tabData, setTabData] = useState<Array<any>>([])
         const tabsRef = useRef<FlatList>(null);
         useEffect(() => {
             if (tabArray) {
-                const newArr = tabArray.map((tab: any) => ({ name: tab.name, offset: tab.offset }))
+                const newArr = tabArray
+                    .map((tab: any) => ({ name: tab.name, offset: tab.offset }))
+                    .filter((item: any, index: number) => index !== 0 && index !== tabArray.length - 1);
                 setTabData(newArr)
             }
         }, [tabArray])
         useEffect(() => {
             if (tabData.length > 0 && tabsRef.current) {
-                const index = tabData.findIndex(tab => tab.offset === scrollToOffset);
+                const index = tabData.findIndex(tab => tab.offset === scrollToOffset)
                 if (index !== -1) {
                     tabsRef.current.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
                 }
             }
         }, [scrollToOffset])
         return (
-            <View style={styles.tabsContainer}>
+            <Animatable.View
+                style={[
+                    styles.tabsContainer,
+                    { transform: [{ translateY: isShowTab ? 0 : -100 }], opacity: isShowTab ? 1 : 0 }
+                ]}
+                duration={300} // 动画时长
+                useNativeDriver={true} // 提高性能
+                animation={isShowTab ? 'slideInUp' : 'slideOutDown'} // 控制动画
+            >
                 {
-                    tabData &&
+                    (tabData) &&
                     <View style={styles.tabsListArray}>
                         <FlatList
                             ref={tabsRef}
                             data={tabData}
-                            renderItem={({ item, index }) => {
+                            renderItem={({ item }) => {
                                 return (
                                     <TouchableOpacity style={styles.tabItem} onPress={() => onChangeOffset(item.offset)}>
                                         {
                                             scrollToOffset == item.offset ? <Text style={{ textAlign: 'left', color: '#1a1a1a', fontWeight: 'bold' }}>{item.name}</Text>
                                                 : <Text style={{ textAlign: 'left', color: '#8a8a8a' }}>{item.name}</Text>
                                         }
-
                                     </TouchableOpacity>
                                 )
                             }}
@@ -52,9 +66,8 @@ const TabsComponent: React.FC<{
                             bounces={false}
                         />
                     </View>
-
                 }
-            </View>
+            </Animatable.View>
         )
     }
 
@@ -65,7 +78,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingTop: 10,
-        paddingBottom: 10
+        paddingBottom: 15,
+        backgroundColor: '#fff'
     },
     tabsListArray: {
         width: '90%',

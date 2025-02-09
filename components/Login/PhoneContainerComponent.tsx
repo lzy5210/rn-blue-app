@@ -62,7 +62,7 @@ const PhoneContainerComponent: React.FC<{
             {loginMethod.loginStatus === '0' && (
                 <View style={styles.inputPassContainer}>
                     <TextInput
-                        style={{ fontSize: 16, fontWeight: '600', height: 30 }}
+                        style={{ fontSize: 16, fontWeight: '600', height: 50 }}
                         value={passWord}
                         textContentType="password"
                         keyboardType="default"
@@ -72,7 +72,7 @@ const PhoneContainerComponent: React.FC<{
                         placeholderTextColor="#8a8a8a"
                         cursorColor="#a0b9fe"
                     />
-                    <TouchableOpacity onPress={togglePasswordVisibility} style={{ position: 'absolute', right: 0, marginTop: 5 }}>
+                    <TouchableOpacity onPress={togglePasswordVisibility} style={{ position: 'absolute', right: 0, marginTop: 15}}>
                         <Image
                             style={{ width: 20, height: 20 }}
                             source={isPasswordVisible ? require('@/assets/login/look.png') : require('@/assets/login/stop.png')}
@@ -83,7 +83,7 @@ const PhoneContainerComponent: React.FC<{
             {loginMethod.loginStatus === '5' && (
                 <View style={styles.inputPassContainer}>
                     <TextInput
-                        style={{ fontSize: 16, fontWeight: '600', width: 200, height: 30 }}
+                        style={{ fontSize: 16, fontWeight: '600', width: 200, height: 50 }}
                         onChangeText={handleChangeCode}
                         value={codeNumber}
                         placeholder="请输入验证码"
@@ -94,7 +94,7 @@ const PhoneContainerComponent: React.FC<{
                     />
                     <TouchableOpacity
                         onPress={handleSendCode}
-                        style={{ position: 'absolute', right: 0, marginTop: 5 }}
+                        style={{ position: 'absolute', right: 0, marginTop: 15 }}
                         disabled={isButtonDisabled} // 根据倒计时禁用按钮
                     >
                         <Text style={{ color: '#a0b9fe', fontSize: 16 }}>
@@ -147,8 +147,6 @@ const styles = StyleSheet.create({
         width: 50
     },
     inputPassContainer: {
-        paddingBottom: 10,
-        marginTop: 20,
         width: 260,
         borderBottomColor: '#DCDCDC',
         borderBottomWidth: 0.2,
