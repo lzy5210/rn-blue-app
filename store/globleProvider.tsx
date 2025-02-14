@@ -8,7 +8,10 @@ const AppContext: any = createContext(undefined)
 const initialState = {
     userInfo: '',
     artworkList: [],
-    indexTabs: []
+    indexTabs: [],
+    topTabs: [],
+    nextRefreshTimes: [],
+    isStickyHeader: false
 }
 
 // 2. 创建 Reducer
@@ -20,6 +23,12 @@ const reducer = (state: typeof initialState, action: { type: string; payload?: a
             return { ...state, artworkList: action.payload };
         case 'SET_INDEXTABS':
             return { ...state, indexTabs: action.payload };
+        case 'SET_TOPTABS':
+            return { ...state, topTabs: action.payload };
+        case 'SET_REFRESHTIME':
+            return { ...state, nextRefreshTimes: action.payload };
+        case 'SET_STICKY_HEADER':
+            return { ...state, isStickyHeader: action.payload };
         default:
             return state;
     }

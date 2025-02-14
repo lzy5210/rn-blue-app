@@ -29,7 +29,7 @@ const routers: Array<any> = [{
   name: 'publish',
 }, {
   id: 4,
-  routerName: '详情',
+  routerName: '消息',
   icon: 'header',
   name: 'explore',
 }, {
@@ -61,7 +61,7 @@ const AnimatedIcon = ({ name, color, focused }: any) => {
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       {
-        name != '' ? <Text style={{ marginTop: 10, color: '#8a8a8a', fontSize: 15, fontWeight: '600' }}>{name}</Text> :
+        name != '' ? <Text style={{ marginTop: 10, color: '#8a8a8a', fontSize: 13, fontWeight: '600' }}>{name}</Text> :
           <Image source={require('@/assets/release.png')} style={{ width: 50, height: 40, marginTop: 15 }} />
       }
     </Animated.View>
@@ -100,11 +100,13 @@ export default function TabLayout() {
             const indexTabs = [
               {
                 name: '关注',
+                categoryIds: [],
                 offset: 0,
                 child: [],
               },
               {
                 name: '全部',
+                categoryIds: [],
                 offset: 1,
                 child: artworkRes.records,
               },
@@ -119,8 +121,9 @@ export default function TabLayout() {
             const categoryDataResults = await Promise.all(categoryDataPromises);
 
             // 组合数据
-            categoryDataResults.forEach((res, index) => {
+            categoryDataResults.forEach((res, index) => {  
               indexTabs.push({
+                categoryIds: categoryRes.data[index].id,
                 name: categoryRes.data[index].categoryName,
                 offset: index + 2,
                 child: res.records, // 假设 `res.records` 是数据
@@ -129,9 +132,16 @@ export default function TabLayout() {
             indexTabs.push({
               name: '杭州',
               offset: indexTabs.length,
+              categoryIds: [],
               child: []
             })
             dispatch({ type: "SET_INDEXTABS", payload: indexTabs });
+
+            const topTabs = indexTabs
+            .map((tab: any) => ({ name: tab.name, offset: tab.offset }))
+            .filter((item: any, index: number) => index !== 0 && index !== indexTabs.length - 1);
+
+            dispatch({ type: "SET_TOPTABS", payload: topTabs });
           }
 
         }

@@ -1,93 +1,148 @@
-import CardScreen from "../card";
+import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from 'react';
 
 export default function TabTwoScreen() {
-  return (
+  const [messages] = useState([
+    {
+      id: 1,
+      type: '赞和收藏',
+      icon: '❤️',
+      unread: true
+    },
+    {
+      id: 2, 
+      type: '新增关注',
+      icon: '👤',
+      unread: false
+    },
+    {
+      id: 3,
+      type: '评论和@',
+      icon: '💬',
+      unread: true
+    },
+    {
+      id: 4,
+      name: 'HadiMkvtr',
+      avatar: 'https://picsum.photos/50',
+      lastMessage: 'Hi',
+      time: '07:49'
+    },
+    {
+      id: 5,
+      name: '小红书6028t073',
+      avatar: 'https://picsum.photos/50',
+      lastMessage: '今天在线',
+      time: '2024-12-29'
+    }
+  ]);
 
-    <CardScreen />
-    // <ParallaxScrollView
-    //   headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-    //   headerImage={
-    //     <IconSymbol
-    //       size={310}
-    //       color="#808080"
-    //       name="chevron.left.forwardslash.chevron.right"
-    //       style={styles.headerImage}
-    //     />
-    //   }>
-    //   <ThemedView style={styles.titleContainer}>
-    //     <ThemedText type="title">Explore</ThemedText>
-    //   </ThemedView>
-    //   <ThemedText>This app includes example code to help you get started.</ThemedText>
-    //   <Collapsible title="File-based routing">
-    //     <ThemedText>
-    //       This app has two screens:{' '}
-    //       <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-    //       <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-    //     </ThemedText>
-    //     <ThemedText>
-    //       The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-    //       sets up the tab navigator.
-    //     </ThemedText>
-    //     <ExternalLink href="https://docs.expo.dev/router/introduction">
-    //       <ThemedText type="link">Learn more</ThemedText>
-    //     </ExternalLink>
-    //   </Collapsible>
-    //   <Collapsible title="Android, iOS, and web support">
-    //     <ThemedText>
-    //       You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-    //       <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-    //     </ThemedText>
-    //   </Collapsible>
-    //   <Collapsible title="Images">
-    //     <ThemedText>
-    //       For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-    //       <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-    //       different screen densities
-    //     </ThemedText>
-    //     <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-    //     <ExternalLink href="https://reactnative.dev/docs/images">
-    //       <ThemedText type="link">Learn more</ThemedText>
-    //     </ExternalLink>
-    //   </Collapsible>
-    //   <Collapsible title="Custom fonts">
-    //     <ThemedText>
-    //       Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-    //       <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-    //         custom fonts such as this one.
-    //       </ThemedText>
-    //     </ThemedText>
-    //     <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-    //       <ThemedText type="link">Learn more</ThemedText>
-    //     </ExternalLink>
-    //   </Collapsible>
-    //   <Collapsible title="Light and dark mode components">
-    //     <ThemedText>
-    //       This template has light and dark mode support. The{' '}
-    //       <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-    //       what the user's current color scheme is, and so you can adjust UI colors accordingly.
-    //     </ThemedText>
-    //     <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-    //       <ThemedText type="link">Learn more</ThemedText>
-    //     </ExternalLink>
-    //   </Collapsible>
-    //   <Collapsible title="Animations">
-    //     <ThemedText>
-    //       This template includes an example of an animated component. The{' '}
-    //       <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-    //       the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-    //       library to create a waving hand animation.
-    //     </ThemedText>
-    //     {Platform.select({
-    //       ios: (
-    //         <ThemedText>
-    //           The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-    //           component provides a parallax effect for the header image.
-    //         </ThemedText>
-    //       ),
-    //     })}
-    //   </Collapsible>
-    // </ParallaxScrollView>
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>消息</Text>
+      
+      <ScrollView>
+        {/* 系统消息部分 */}
+        <View style={styles.systemSection}>
+          {messages.slice(0,3).map(item => (
+            <TouchableOpacity key={item.id} style={styles.systemItem}>
+              <View style={[styles.iconContainer, item.unread && styles.unread]}>
+                <Text style={styles.icon}>{item.icon}</Text>
+              </View>
+              <Text style={styles.systemText}>{item.type}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* 聊天列表部分 */}
+        <View style={styles.chatSection}>
+          {messages.slice(3).map(item => (
+            <TouchableOpacity key={item.id} style={styles.chatItem}>
+              <Image source={{uri: item.avatar}} style={styles.avatar} />
+              <View style={styles.chatContent}>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.message}>{item.lastMessage}</Text>
+              </View>
+              <Text style={styles.time}>{item.time}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    padding: 15
+  },
+  systemSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0'
+  },
+  systemItem: {
+    alignItems: 'center'
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5
+  },
+  unread: {
+    backgroundColor: '#ffe4e4'
+  },
+  icon: {
+    fontSize: 20
+  },
+  systemText: {
+    fontSize: 12,
+    color: '#666'
+  },
+  chatSection: {
+    paddingHorizontal: 15
+  },
+  chatItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0'
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25
+  },
+  chatContent: {
+    flex: 1,
+    marginLeft: 10
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 5
+  },
+  message: {
+    fontSize: 14,
+    color: '#666'
+  },
+  time: {
+    fontSize: 12,
+    color: '#999',
+    marginLeft: 10
+  }
+});

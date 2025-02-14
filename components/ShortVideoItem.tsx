@@ -19,11 +19,10 @@ const WIDTH = Dimensions.get('screen').width;
 // 连续点击阈值 连续两次点击间隔小于阈值视为双击
 const CLICK_THRESHOLD = 200;
 
-const TEST_VIDEO = 'https://www.w3schools.com/html/mov_bbb.mp4';
-
 export interface ShortVideoItemProps extends ViewProps {
   paused: boolean;
   id: any;
+  artworkVideo: string
 }
 
 interface HeartData {
@@ -47,7 +46,7 @@ const ShortVideoItem = React.memo((props: ShortVideoItemProps) => {
   useEffect(() => {
     setTimeout(() => {
       setData({
-        video: TEST_VIDEO,
+        video: props.artworkVideo,
         hasFavor: false,
       });
     });

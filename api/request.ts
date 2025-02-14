@@ -3,9 +3,9 @@ import { router } from "expo-router";
 import { Alert } from "react-native";
 
 // API 基础地址
-const BASE_URL = "http://101.43.99.167:8080"; // 可修改
+// const BASE_URL = "http://101.43.99.167:8080"; // 可修改
 // const BASE_URL = "http://192.168.146.1:8080"; // 可修改
-
+const BASE_URL = "https://blue-admin.iblut.cn"; // 可修改
 /**
  * 统一封装 fetch 请求
  * @param {string} url 请求地址（相对路径）

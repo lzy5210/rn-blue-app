@@ -39,24 +39,12 @@ export default function RootLayout() {
           <Stack.Screen name="login" options={{ headerShown: false, gestureEnabled: false }} />
           <Stack.Screen name="card" options={{ headerShown: false, gestureEnabled: false }} />
           <Stack.Screen name="loginphone"
-            // options={{
-            //   headerShown: true,
-            //   gestureEnabled: false,
-            //   headerLeft: () => {
-            //     return (
-            //       <TouchableOpacity onPress={() => router.back()}>
-            //         <Ionicons name="arrow-back" size={24} color="#8a8a8a" />
-            //       </TouchableOpacity>
-            //     )
-            //   },
-            //   headerRight: () => {
-            //     return (
-            //       <TouchableOpacity onPress={() => console.log('点击了右侧按钮')}>
-            //         <Text style={{ color: '#8a8a8a', marginRight: 15, fontSize: 16 }}>帮助</Text>
-            //       </TouchableOpacity>
-            //     )
-            //   }
-            // }}
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
+          <Stack.Screen name="previewvideo"
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
+          <Stack.Screen name="articleInfo"
             options={{ headerShown: false, gestureEnabled: false }}
           />
         </Stack>

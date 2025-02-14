@@ -15,19 +15,17 @@ const TabsComponent: React.FC<{
     scrollToOffset,
     onChangeOffset
 }) => {
-
+        //正在滚动
+        const [isRuningScroll, setIsRuningScroll] = useState(false)
         const [tabData, setTabData] = useState<Array<any>>([])
         const tabsRef = useRef<FlatList>(null);
         useEffect(() => {
             if (tabArray) {
-                const newArr = tabArray
-                    .map((tab: any) => ({ name: tab.name, offset: tab.offset }))
-                    .filter((item: any, index: number) => index !== 0 && index !== tabArray.length - 1);
-                setTabData(newArr)
+                setTabData(tabArray)
             }
         }, [tabArray])
-        useEffect(() => {
-            if (tabData.length > 0 && tabsRef.current) {
+        useEffect(() => {     
+            if (tabData.length > 0 && tabsRef.current) {     
                 const index = tabData.findIndex(tab => tab.offset === scrollToOffset)
                 if (index !== -1) {
                     tabsRef.current.scrollToIndex({ index, animated: true, viewPosition: 0.5 });

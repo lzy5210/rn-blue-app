@@ -10,15 +10,22 @@
     "newArchEnabled": true,
     "ios": {
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "需要访问您的相册来保存图片"
+        "NSPhotoLibraryUsageDescription": "需要访问您的相册来保存图片",
+        "NSContactsUsageDescription": "需要访问您的通讯录来拨打电话",
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       },
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lzy98989.rnbluetestapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.lzy98989.rnbluetestapp"
     },
     "web": {
       "bundler": "metro",
@@ -39,6 +46,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c8473a8d-c1dd-43c1-974d-8f39040dd78b"
+      }
     }
   }
 }
