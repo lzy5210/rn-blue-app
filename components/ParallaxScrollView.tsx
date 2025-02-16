@@ -1,5 +1,5 @@
-import { useState, type PropsWithChildren, type ReactElement } from 'react';
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { useEffect, useRef, useState, type PropsWithChildren, type ReactElement } from 'react';
+import { StyleSheet, TouchableOpacity, View, Text, Image } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -12,6 +12,7 @@ import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import PersonHeaderComponent from '@/components/Person/PersonHeaderComponent';
 import { useGlobleContext } from '@/store/globleProvider';
+import TabSelectComponent from '@/components/Person/TabSelectComponent';
 
 const HEADER_HEIGHT = 350;
 
@@ -52,6 +53,7 @@ export default function ParallaxScrollView({
   }
   const [activeTab, setActiveTab] = useState(0);
 
+
   return (
     <ThemedView style={styles.container}>
       <PersonHeaderComponent />
@@ -78,19 +80,7 @@ export default function ParallaxScrollView({
           ]}>
           {headerImage}
         </Animated.View>
-
-        <View style={styles.tabContainer}>
-          <TouchableOpacity
-            style={styles.tabItem}
-          >
-            <Text style={[styles.tabText, activeTab === 0 && styles.activeTab]}>笔记</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.tabItem}
-          >
-            <Text style={[styles.tabText, activeTab === 1 && styles.activeTab]}>收藏</Text>
-          </TouchableOpacity>
-        </View>
+        <TabSelectComponent />
         <ThemedView style={state.isStickyHeader}>{children}</ThemedView>
       </Animated.ScrollView>
     </ThemedView>
@@ -104,24 +94,5 @@ const styles = StyleSheet.create({
   header: {
     height: HEADER_HEIGHT,
     overflow: 'hidden',
-  }, 
-  tabContainer: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  tabItem: {
-    flex: 1,
-    paddingVertical: 15,
-    alignItems: 'center',
-  },
-  tabText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  activeTab: {
-    color: '#333',
-    fontWeight: 'bold',
-  },
+  }
 });

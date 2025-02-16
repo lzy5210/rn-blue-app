@@ -6,19 +6,16 @@ import { useGlobleContext } from '@/store/globleProvider';
 
 export default function MineScreen() {
     const scrollY = useRef(new Animated.Value(0)).current;
+    const translateY = useRef(new Animated.Value(0)).current;
     const { width } = Dimensions.get('window');
     const [activeTab, setActiveTab] = useState(0);
     const { state, dispatch }: any = useGlobleContext();
     useEffect(() => {
-        if (state.isStickyHeader) {
-            // Alert.alert('开始吸顶');
-            console.log('开始吸顶');
-        } else {
-            console.log('结束吸顶');
-            // Alert.alert('结束吸顶');
-        }
-
-
+        Animated.timing(translateY, {
+            toValue: state.isStickyHeader ? 100 : 0, // 根据状态决定 Y 轴偏移量
+            duration: 300, // 动画持续时间
+            useNativeDriver: true, // 使用原生驱动
+        }).start();
     }, [state.isStickyHeader]);
 
     const handleScroll = Animated.event(
@@ -72,17 +69,19 @@ export default function MineScreen() {
             headerImage={
                 <Animated.View style={[styles.header, { height: headerHeight }]}>
                     <ImageBackground
-                        source={{ uri: 'https://picsum.photos/800/600' }}
+                        source={require('@/assets/bizhi/b2.jpg')}
                         style={styles.headerBackground}
                     >
                         <View style={styles.headerOverlay}>
                             <Animated.Image
-                                source={require("@/assets/avatar.jpg")}
-                                style={[styles.avatar, { transform: [{ scale: avatarScale }] }]}
+                                source={require("@/assets/xiaonan.jpg")}
+                                style={[styles.avatar, {
+                                    transform: [{ translateY: translateY }],// 当头像浮动时，zIndex 增加// 使用动画值
+                                }]}
                             />
                             <Animated.View style={{ opacity: headerOpacity, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={[styles.nickname, { color: '#fff' }]}>小红书用户</Text>
-                                <Text style={[styles.redId, { color: '#ddd' }]}>小红书号: RED123456</Text>
+                                <Text style={[styles.nickname, { color: '#fff' }]}>小楠书用户</Text>
+                                <Text style={[styles.redId, { color: '#ddd' }]}>小楠号: RED123456</Text>
 
                                 <View style={styles.statsContainer}>
                                     <View style={styles.statItem}>
